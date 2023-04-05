@@ -1,0 +1,273 @@
+<style>
+  #wrapper.dashboard .user-account-links {
+    padding: unset;
+    border: none;
+    float: right;
+  }
+
+  @media (max-width: 580px) {
+    #wrapper.dashboard .user-account-links {
+      display: unset;
+    }
+    #wrapper.dashboard .user-account-links li.uacc {
+      display: none;
+    }
+    .notifications {
+      width: 250px;
+    }
+  }
+</style>
+<body>
+  <div id="wrapper" class="dashboard">
+    <header id="header">
+      <div class="container-fluid">
+        <a href="#" class="sidebar-opener"><span></span></a>
+        <div class="logo">
+          <a href="/Home/Home">
+            <img src="../../assets/images/logo-h.png" alt="AtlanticStar" />
+          </a>
+        </div>
+        <div class="dropdown rate-dropdown">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            4.91$
+          </button>
+          <div class="dropdown-menu" style="">
+            <a
+              class="dropdown-item"
+              href="http://www.ibooksocial.com"
+              target="_blank"
+            >
+              <i class="fas fa-arrow-circle-up text-success"></i>
+              PURCHASE
+            </a>
+            <a class="dropdown-item" href="/player/wallet-withdraw">
+              <i class="fas fa-arrow-circle-down text-danger"></i>
+              WITHDRAW
+            </a>
+          </div>
+        </div>
+        <ul class="user-account-links">
+          <li class="uacc">
+            <a href="#"
+              ><i class="fal fa-user"></i
+              ><span class="text">shahzaib.jutt007@gmail.com</span></a
+            >
+          </li>
+          <li>
+            <a href="#" id="bell"
+              ><i style="background: #6e2763"
+                ><img src="../../assets/images/bell-icon.png" alt="" /></i
+              ><span class="text"></span
+              ><span class="badge badge-light noti-count"></span
+            ></a>
+          </li>
+        </ul>
+        <div class="notifications" id="box">
+          <h2>Notifications</h2>
+          <div id="noti-items" style="max-height: 400px; overflow-y: auto">
+            <!--<div class="notifications-item" onclick="ViewNotification(this, 1, 'title', 'message', false)">
+                            <div class="text">
+                                <h4><span class="fa fa-dot-circle-o text-danger unread"></span> Samso aliao</h4>
+                                <p>Samso Nagaro Like your home work</p>
+                                <p class="noti-created"><i class="fa fa-clock-o"> 2/3/2002 12:23 AM</i></p>
+                            </div>
+                        </div>
+                        <div class="notifications-item">
+                            <img src="https://img.icons8.com/flat_round/64/000000/vote-badge.png" alt="img">
+                            <div class="text">
+                                <h4>John Silvester</h4>
+                                <p>+20 vista badge earned</p>
+                            </div>
+                        </div>-->
+          </div>
+        </div>
+      </div>
+    </header>
+    <main id="main">
+      <app-sidebar />
+      <app-content />
+      <app-modal />
+    </main>
+    <footer id="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <div class="copyrights">
+              <p>© 2023 Skills & Slots | All Rights Reserved</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <app-notification />
+  
+
+  <script src="/lib/jquery/jquery.min.js"></script>
+  <script src="/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+  <script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+  <script src="/js/proper.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+  <script src="/js/customer-layout.js"></script>
+
+  <script
+    type="text/javascript"
+    src="https://cdn.datatables.net/v/dt/dt-1.10.24/datatables.min.js"
+  ></script>
+
+  <script>
+    $(function () {
+      $("#tbl-ga").DataTable();
+
+      $("#form-status-change").submit(function (e) {
+        if ($("#ga-status").val() == "") {
+          toastr.error("Please enter status");
+          e.preventDefault();
+        }
+      });
+    });
+
+    function ReportGamingPlatformIssueSubmit(e) {
+      $(e).find("button[type='submit']").prop("disabled", true);
+    }
+
+    function CheckFullyOpr(e) {
+      var chkd = $(e).prop("checked");
+      var status = $(e).val();
+      if (chkd) {
+        $(".sec-status").hide();
+        $("#ga-status").val(status);
+        $("#ga-sdetail").text("");
+      } else {
+        $(".sec-status").show();
+        $("#ga-status").val("");
+        $("#ga-sdetail").text("");
+      }
+    }
+
+    function ChangeGamingAccount(e) {
+      var opt = $(e).find("option:selected").val();
+      if (opt != "") {
+        $("#ck-fo").prop("checked", true).change();
+      } else {
+        $("#ck-fo").prop("checked", false).change();
+      }
+    }
+  </script>
+
+  <script type="text/javascript"></script>
+
+  <script>
+    $(function () {
+      setInterval(function () {
+        $.get("/Account/GetWalletBalance", function (res) {
+          $("#dropdownMenuButton").text(res + "$");
+        });
+      }, 10000);
+    });
+  </script>
+
+  <script>
+    var NotificationsList;
+    $(document).ready(function () {
+      var down = false;
+      $("#bell").click(function (e) {
+        var color = $(this).text();
+        if (down) {
+          //$('#box').css('height', '0px');
+          //$('#box').css('opacity', '0');
+          $("#box").css("display", "none");
+          down = false;
+        } else {
+          //$('#box').css('height', 'auto');
+          //$('#box').css('opacity', '1');
+          $("#box").css("display", "block");
+          down = true;
+        }
+      });
+
+      function RenderNotifications() {
+        $.get("/PlayerNotifications/GetNotifications", function (res, status) {
+          if (status == "success") {
+            if (res.unreadNotificationsCount > 0) {
+              $("#bell .noti-count").text(res.unreadNotificationsCount);
+              $("#bell .noti-count").show();
+            } else $("#bell .noti-count").hide();
+
+            if (res.notificationsList.length > 0) {
+              NotificationsList = res.notificationsList;
+              var list = "";
+              $.each(res.notificationsList, function (ind, val) {
+                list += `<div class="notifications-item" onclick="ViewNotification(this, ${
+                  val.id
+                })">
+                                    <div class="text">
+                                        <h4>${
+                                          !val.isRead
+                                            ? `<span class="fa fa-dot-circle-o text-danger unread"></span> `
+                                            : ``
+                                        }${val.title}</h4>
+                                        <p>${
+                                          val.message.length > 40
+                                            ? val.message.substring(0, 40) +
+                                              "..."
+                                            : val.message
+                                        }</p>
+                                        <p class="noti-created"><i class="fa fa-clock-o"> ${
+                                          val.formatedCreatedAt
+                                        }</i></p>
+                                    </div>
+                                </div>`;
+              });
+              $("#noti-items").html(list);
+            } else
+              $("#noti-items").html(
+                "<div class='notifications-item'><p class='text-center text-mute'>No notifcation</p></div>"
+              );
+          }
+        });
+      }
+
+      setInterval(RenderNotifications, 30000);
+
+      RenderNotifications();
+
+      setTimeout(function () {
+        $("table").removeAttr("style");
+      }, 1500);
+    });
+
+    function ViewNotification(e, id) {
+      debugger;
+      var notification = NotificationsList.find((obj) => obj.id == id);
+
+      if ($(e).find(".unread").length == 1) {
+        $(e).find(".unread").remove();
+        var uc = $("#bell .noti-count").text();
+        $("#bell .noti-count").text(--uc);
+
+        $.post(
+          "/PlayerNotifications/MarkNotificationNotification",
+          { id: id },
+          function () {
+            if (status == "success") {
+            }
+          }
+        );
+      }
+
+      $("#modal-noti-view").find(".title").html(notification.title);
+      $("#modal-noti-view").find(".msg").html(notification.message);
+      $("#modal-noti-view").modal("show");
+    }
+  </script>
+</body>
